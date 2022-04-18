@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 
 [build-dependencies]
-tonic-build = "*"
+tonic-build = "0.7"
