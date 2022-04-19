@@ -18,7 +18,6 @@ async fn main() -> Result<(), CustomError> {
 
 #[derive(Debug)]
 enum CustomError {
-    Other(String),
     TonicTransport(TError),
 }
 
