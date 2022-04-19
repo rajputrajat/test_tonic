@@ -1,5 +1,13 @@
-use hello::{greeter_server::Greeter, HelloReply, HelloRequest};
-use tonic::{Request, Response, Status};
+use std::net::{AddrParseError, SocketAddr};
+
+use hello::{
+    greeter_server::{Greeter, GreeterServer},
+    HelloReply, HelloRequest,
+};
+use tonic::{
+    transport::{Error as TError, Server},
+    Request, Response, Status,
+};
 
 pub mod hello {
     tonic::include_proto!("hello");
@@ -19,4 +27,31 @@ impl Greeter for MyGreeeterServer {
 }
 
 #[tokio::main]
-async fn main() {}
+async fn main() -> Result<(), CustomError> {
+    let addr = "[::]:50051".parse::<SocketAddr>()?;
+    let greeter = MyGreeeterServer;
+    println!("listening on '{}'", addr);
+    Server::builder()
+        .add_service(GreeterServer::new(greeter))
+        .serve(addr)
+        .await?;
+    Ok(())
+}
+
+#[derive(Debug)]
+enum CustomError {
+    TonicTransport(TError),
+    SockerParser(AddrParseError),
+}
+
+impl From<TError> for CustomError {
+    fn from(e: TError) -> Self {
+        CustomError::TonicTransport(e)
+    }
+}
+
+impl From<AddrParseError> for CustomError {
+    fn from(e: AddrParseError) -> Self {
+        CustomError::SockerParser(e)
+    }
+}
