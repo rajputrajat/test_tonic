@@ -9,7 +9,7 @@ pub mod hello {
 async fn main() -> Result<(), CustomError> {
     let mut client = GreeterClient::connect("http://[::1]:50051").await?;
     let req = Request::new(HelloRequest {
-        name: "drink this.".to_owned(),
+        name: "I am client. Hello server!".to_owned(),
     });
     let resp = client.say_hello(req).await;
     println!("response: {:?}", resp);

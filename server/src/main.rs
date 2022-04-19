@@ -20,7 +20,7 @@ impl Greeter for MyGreeeterServer {
     async fn say_hello(&self, req: Request<HelloRequest>) -> Result<Response<HelloReply>, Status> {
         println!("got a req: '{:?}'", req);
         let reply = HelloReply {
-            message: "Hi there".to_owned(),
+            message: "Hi there. I am server".to_owned(),
         };
         Ok(Response::new(reply))
     }
